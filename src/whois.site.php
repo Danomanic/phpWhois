@@ -25,27 +25,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-if (!defined('__DOMAINDISCOVER_HANDLER__'))
-	define('__DOMAINDISCOVER_HANDLER__', 1);
+if (!defined('__SITE_HANDLER__'))
+    define('__SITE_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class domaindiscover_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                'owner' => 'Registrant:',
-                'admin' => 'Administrative Contact',
-                'tech' => 'Technical Contact',
-                'zone' => 'Zone Contact',
-                'domain.name' => 'Domain Name:',
-                'domain.changed' => 'Last updated on',
-                'domain.created' => 'Domain created on',
-                'domain.expires' => 'Domain expires on'
-		            );
+class site_handler
+    {
+    function parse($data_str, $query)
+        {
+          $translate = array(
+            'Registry Expiry Date' => 'expires',
+            'Registrar' => 'sponsor'
+            );
+		$r['regrinfo'] = generic_parser_a($data_str['rawdata'], $translate, $contacts, 'domain', 'Ymd');
 
-		return easy_parser($data_str, $items, 'dmy', false, false, true);
-		}
-	}
+    $r['regyinfo'] = array(
+                  'referrer' => 'http://radixregistry.com',
+                  'registrar' => 'Radix'
+                  );
+
+		return $r;
+        }
+    }
 ?>
